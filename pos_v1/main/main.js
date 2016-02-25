@@ -32,3 +32,16 @@ function mergeBarcode(itemList) {
   }
   return countedBarcode;
 }
+
+function createCartItems(countedBarcode) {
+  var allItems = loadAllItems();
+  var cartItems = [];
+  var index = 0;
+  for(var i=0;i<allItems.length;i++) {
+    if(allItems[i].barcode == countedBarcode[index].barcode) {
+      cartItems[index] = {item:allItems[i],count:countedBarcode[index].count};
+      index ++;
+    }
+  }
+  return cartItems;
+}
