@@ -58,16 +58,6 @@ function createPromotionItems(cartItems) {
     else {
       promotionItems[i] = {cartItem:cartItems[i],totalPrice:calculateNoBuyTwoGetOne(cartItems[i]),savedPrice:0.00};
     }
-    // var barcodes = promotions[0].barcodes;
-    // for(var j=0;j<(promotions[0].barcodes.length);j++) {
-    //   if((barcode==promotions[0].barcodes[j])) {
-    //     var promotionPrice = calculateBuyTwoGetOne(cartItems[i]);
-    //     promotionItems[i] = {cartItem:cartItems[i],totalPrice:promotionPrice[0],savedPrice:promotionPrice[1]};
-    //   }
-    //   else {
-    //     promotionItems[i] = {cartItem:cartItems[i],totalPrice:calculateNoBuyTwoGetOne(cartItems[i]),savedPrice:0.00};
-    //   }
-    // }
   }
   return promotionItems;
 }
@@ -87,4 +77,16 @@ function calculateNoBuyTwoGetOne(cartItems) {
   var count = cartItems.count;
   var totalPrice = price*count;
   return totalPrice;
+}
+
+function createReceiptItems(promotionItems) {
+  var receiptItems = [];
+  var totalPrice = 0.00;
+  var savedPrice = 0.00;
+  for(var i=0;i<promotionItems.length;i++) {
+    totalPrice += promotionItems[i].totalPrice;
+    savedPrice += promotionItems[i].savedPrice;
+  }
+  receiptItems = {promotionItem:promotionItems,finalPrice:totalPrice,finalSavedPrice:savedPrice};
+  return receiptItems;
 }

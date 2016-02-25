@@ -42,4 +42,14 @@ describe('pos', function() {
                   {cartItem:cartItems[2],totalPrice:9.00,savedPrice:4.50}];
     expect(result).toEqual(promotionItems);
   });
+
+  it('should create receiptItems', function() {
+    var itemList = splitBarcode(inputs);
+    var countedBarcode = mergeBarcode(itemList);
+    var cartItems = createCartItems(countedBarcode);
+    var promotionItems = createPromotionItems(cartItems);
+    var receiptItems = createReceiptItems(promotionItems);
+    var result = {promotionItem:promotionItems,finalPrice:51.00,finalSavedPrice:7.50};
+    expect(result).toEqual(receiptItems);
+  });
 });
