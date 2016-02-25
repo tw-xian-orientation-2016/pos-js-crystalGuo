@@ -45,3 +45,46 @@ function createCartItems(countedBarcode) {
   }
   return cartItems;
 }
+
+function createPromotionItems(cartItems) {
+  var promotions = loadPromotions();
+  var promotionItems = [];
+  for(var i=0;i<cartItems.length;i++) {
+    var barcode = cartItems[i].item.barcode;
+    if((barcode==promotions[0].barcodes[0]) || (barcode==promotions[0].barcodes[1]) || (barcode==promotions[0].barcodes[2])) {
+      var promotionPrice = calculateBuyTwoGetOne(cartItems[i]);
+      promotionItems[i] = {cartItem:cartItems[i],totalPrice:promotionPrice[0],savedPrice:promotionPrice[1]};
+    }
+    else {
+      promotionItems[i] = {cartItem:cartItems[i],totalPrice:calculateNoBuyTwoGetOne(cartItems[i]),savedPrice:0.00};
+    }
+    // var barcodes = promotions[0].barcodes;
+    // for(var j=0;j<(promotions[0].barcodes.length);j++) {
+    //   if((barcode==promotions[0].barcodes[j])) {
+    //     var promotionPrice = calculateBuyTwoGetOne(cartItems[i]);
+    //     promotionItems[i] = {cartItem:cartItems[i],totalPrice:promotionPrice[0],savedPrice:promotionPrice[1]};
+    //   }
+    //   else {
+    //     promotionItems[i] = {cartItem:cartItems[i],totalPrice:calculateNoBuyTwoGetOne(cartItems[i]),savedPrice:0.00};
+    //   }
+    // }
+  }
+  return promotionItems;
+}
+
+function calculateBuyTwoGetOne(cartItems) {
+  var price = cartItems.item.price;
+  var count = cartItems.count;
+  var savedCount = Math.floor(count/3);
+  var savedPrice = price*savedCount;
+  var totalPrice = price*(count-savedCount);
+  var promotinPrice = [totalPrice,savedPrice];
+  return promotinPrice;
+}
+
+function calculateNoBuyTwoGetOne(cartItems) {
+  var price = cartItems.item.price;
+  var count = cartItems.count;
+  var totalPrice = price*count;
+  return totalPrice;
+}

@@ -31,4 +31,15 @@ describe('pos', function() {
     var cartItems = createCartItems(countedBarcode);
     expect(result).toEqual(cartItems);
   });
+
+  it('should create itemList that contains promotion', function() {
+    var itemList = splitBarcode(inputs);
+    var countedBarcode = mergeBarcode(itemList);
+    var cartItems = createCartItems(countedBarcode);
+    var promotionItems = createPromotionItems(cartItems);
+    var result = [{cartItem:cartItems[0],totalPrice:12.00,savedPrice:3.00},
+                  {cartItem:cartItems[1],totalPrice:30.00,savedPrice:0.00},
+                  {cartItem:cartItems[2],totalPrice:9.00,savedPrice:4.50}];
+    expect(result).toEqual(promotionItems);
+  });
 });
