@@ -20,32 +20,40 @@ function splitBarcode(tags) {
   }
 
 function mergeBarcode(itemList) {
-  var countedBarcode = [] ;
+  var countedBarcodes = [] ;
   var index = 0 ;
-  countedBarcode[0] = itemList[0] ;
+  countedBarcodes[0] = itemList[0] ;
   for ( var i = 1 ; i < itemList.length ; i++ ) {
-    if(countedBarcode[index].barcode == itemList[i].barcode) {
-      countedBarcode[index].count += itemList[i].count ;
+    if( countedBarcodes[index].barcode == itemList[i].barcode ) {
+      countedBarcodes[index].count += itemList[i].count ;
     }
     else{
       index ++ ;
-      countedBarcode[index] = itemList[i] ;
+      countedBarcodes[index] = itemList[i] ;
     }
   }
-  return countedBarcode ;
+  return countedBarcodes ;
 }
 
-function createCartItems(countedBarcode) {
-  var allItems = loadAllItems();
-  var cartItems = [];
-  var index = 0;
-  for(var i=0;i<allItems.length;i++) {
-    if(allItems[i].barcode == countedBarcode[index].barcode) {
-      cartItems[index] = {item:allItems[i],count:countedBarcode[index].count};
-      index ++;
+function createCartItems(countedBarcodes) {
+  var cartItems = [] ;
+
+   countedBarcodes.forEach( function(countedBarcode) {
+     var item = getItem(countedBarcode) ;
+     cartItems.push( {item:item , count:countedBarcode.count} ) ;
+   } ) ;
+
+   return cartItems ;
+}
+
+function getItem(countedBarcode) {
+  var allItems = loadAllItems() ;
+
+  for ( var i = 0 ; i < allItems.length ; i++ ) {
+    if ( countedBarcode.barcode === allItems[i].barcode ) {
+      return allItems[i] ;
     }
   }
-  return cartItems;
 }
 
 function createPromotionItems(cartItems) {
