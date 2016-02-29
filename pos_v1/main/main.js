@@ -56,68 +56,35 @@ function getItem(countedBarcode) {
   }
 }
 
-// function createPromotionItems(cartItems) {
-//   var promotionItems = [] ;
-//
-//   cartItems.forEach( function(cartItem) {
-//     var type = getPromotionType(cartItem) ;
-//     // var type = 'BUY_TWO_GET_ONE_FREE' ;
-//     if ( type === 'BUY_TWO_GET_ONE_FREE' ) {
-//       var savedPrice = Math.floor( cartItem.count/3 ) * cartItem.item.price ;
-//     } else {
-//       var savedPrice = 0.00 ;
-//     }
-//     var totalPrice = cartItem.count * cartItem.item.price - savedPrice ;
-//
-//     promotionItems.push( { cartItem:cartItem , totalPrice:totalPrice , savedPrice:savedPrice } ) ;
-//   } ) ;
-//
-//   return promotionItems ;
-// }
-//
-// function getPromotionType(cartItem) {
-//   var promotions = loadPromotions();
-//   for ( var i = 0 ; i < promotions.length ; i++ ) {
-//     for ( var j = 0 ; j < promotions[i].barcodes.length ; j++ ) {
-//       if ( promotions[i].barcodes[j] === cartItem.barcode) {
-//         return promotions[i].type ;
-//       }
-//     }
-//   }
-
-
 function createPromotionItems(cartItems) {
-  var promotions = loadPromotions();
-  var promotionItems = [];
-  for(var i=0;i<cartItems.length;i++) {
-    var barcode = cartItems[i].item.barcode;
-    if((barcode==promotions[0].barcodes[0]) || (barcode==promotions[0].barcodes[1]) || (barcode==promotions[0].barcodes[2])) {
-      var promotionPrice = calculateBuyTwoGetOne(cartItems[i]);
-      promotionItems[i] = {cartItem:cartItems[i],totalPrice:promotionPrice[0],savedPrice:promotionPrice[1]};
+  var promotionItems = [] ;
+
+  cartItems.forEach( function(cartItem) {
+   var type = getPromotionType(cartItem) ;
+    if ( type === 'BUY_TWO_GET_ONE_FREE' ) {
+      var savedPrice = Math.floor( cartItem.count/3 ) * cartItem.item.price ;
+    } else {
+      var savedPrice = 0.00 ;
     }
-    else {
-      promotionItems[i] = {cartItem:cartItems[i],totalPrice:calculateNoBuyTwoGetOne(cartItems[i]),savedPrice:0.00};
+    var totalPrice = cartItem.count * cartItem.item.price - savedPrice ;
+
+    promotionItems.push( { cartItem:cartItem , totalPrice:totalPrice , savedPrice:savedPrice } ) ;
+  } ) ;
+
+  return promotionItems ;
+}
+
+function getPromotionType(cartItem) {
+  var promotions = loadPromotions();
+  for ( var i = 0 ; i < promotions.length ; i++ ) {
+    for ( var j = 0 ; j < promotions[i].barcodes.length ; j++ ) {
+      if ( promotions[i].barcodes[j] === cartItem.barcode) {
+        return promotions[i].type ;
+      }
     }
   }
-  return promotionItems;
 }
 
-function calculateBuyTwoGetOne(cartItems) {
-  var price = cartItems.item.price;
-  var count = cartItems.count;
-  var savedCount = Math.floor(count/3);
-  var savedPrice = price*savedCount;
-  var totalPrice = price*(count-savedCount);
-  var promotinPrice = [totalPrice,savedPrice];
-  return promotinPrice;
-}
-
-function calculateNoBuyTwoGetOne(cartItems) {
-  var price = cartItems.item.price;
-  var count = cartItems.count;
-  var totalPrice = price*count;
-  return totalPrice;
-}
 
 function createReceiptItems(promotionItems) {
   var receiptItems = [];
@@ -127,8 +94,8 @@ function createReceiptItems(promotionItems) {
     totalPrice += promotionItems[i].totalPrice;
     savedPrice += promotionItems[i].savedPrice;
   }
-  receiptItems = {promotionItem:promotionItems,finalPrice:totalPrice,finalSavedPrice:savedPrice};
-  return receiptItems;
+  receiptItems = { promotionItem:promotionItems , finalPrice:totalPrice , finalSavedPrice:savedPrice };
+  return receiptItems ;
 }
 
 function createShoppingInfo(receiptItems) {
