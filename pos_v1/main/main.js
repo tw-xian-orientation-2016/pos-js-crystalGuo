@@ -4,7 +4,7 @@ function printReceipt(inputs) {
   var cartItems = createCartItems(countedBarcode) ;
   var promotionItems = createPromotionItems(cartItems) ;
   var receiptItems = createReceiptItems(promotionItems) ;
-  var shoppingInfo = createShoppingInfo(receiptItems) ;
+  var receipt = createReceipt(receiptItems) ;
   console.log(shoppingInfo) ;
 }
 
@@ -98,21 +98,20 @@ function createReceiptItems(promotionItems) {
   return receiptItems ;
 }
 
-function createShoppingInfo(receiptItems) {
-  var shoppingInfo = '***<没钱赚商店>收据***\n';
-  var promotionItems = receiptItems.promotionItem;
-  for(var i=0;i<promotionItems.length;i++) {
-    var cartItem = promotionItems[i].cartItem;
-    var item = cartItem.item;
-    shoppingInfo +=
-      ('名称：' + item.name + '，数量：' +
-      cartItem.count + item.unit +
+function createReceipt(receiptItems) {
+  var receipt = '***<没钱赚商店>收据***\n' ;
+  var promotionItems = receiptItems.promotionItem ;
+  for( var i = 0 ; i < promotionItems.length ; i++ ) {
+    var cartItem = promotionItems[i].cartItem ;
+    var item = cartItem.item ;
+    receipt +=
+      ( '名称：' + item.name + '，数量：' + cartItem.count + item.unit +
         '，单价：' + item.price.toFixed(2) + '(元)，小计：' +
-        promotionItems[i].totalPrice.toFixed(2) + '(元)\n');
+        promotionItems[i].totalPrice.toFixed(2) + '(元)\n' ) ;
   }
   shoppingInfo += ('----------------------\n' +
     '总计：'+ receiptItems.finalPrice.toFixed(2) + '(元)\n' +
     '节省：'+ receiptItems.finalSavedPrice.toFixed(2) + '(元)\n' +
-    '**********************');
-  return shoppingInfo;
+    '**********************') ;
+  return receipt ;
 }
